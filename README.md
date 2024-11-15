@@ -1,4 +1,4 @@
-# 👋 Olá, eu sou Rodniski!
+# 👋 Olá, eu sou Gui!
 
 🌟 Bem-vindo(a) ao meu perfil no GitHub! Sou um desenvolvedor apaixonado pela arte de criar soluções criativas e organizadas, com foco em SaaS corporativo, APIs e experiências de usuário impactantes.
 

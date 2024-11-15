@@ -6,7 +6,7 @@
 
 ## 🚀 Sobre Mim
 
-- 💻 **Desenvolvedor Fullstack Avançado** com foco em **TypeScript, JavaScript e Go**.  
+- 💻 **Desenvolvedor Fullstack Avançado** com foco em **TypeScript e Go**.  
   - Também possuo conhecimento em Java, Python e PHP.
 - 🎯 Meu forte é **SaaS corporativo**, mas também adoro trabalhar em **páginas de marketing** e construir APIs bem estruturadas.
 - 🌍 Atualmente, busco evoluir em **Go** e aprender **Rust** para expandir ainda mais meu repertório técnico.

@@ -15,10 +15,10 @@
 
 ## 🛠️ Tecnologias & Ferramentas
 
-- **Frontend**: React (Next.js), Svelte, TailwindCSS, DaisyUI, Shadcn/UI, SkeletonUI, TailwindUI, etc!  
+- **Frontend**: React (Next.js), Svelte, VUE, PHP, TailwindCSS, DaisyUI, Shadcn/UI, SkeletonUI, TailwindUI, etc!  
 - **Backend**: Go (Golang), Node.js  
-- **Banco de Dados**: PostgreSQL, MongoDB, Microsoft SQL Server  
-- **Outros**: Docker, CI/CD com GitHub Actions, IndexedDB, Salesforce Admin  
+- **Banco de Dados**: PostgreSQL, Microsoft SQL Server  
+- **Outros**: Docker, CI/CD com GitHub Actions, Jotai, IndexedDB, Salesforce Admin,   
 
 ---
 

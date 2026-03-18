@@ -129,8 +129,7 @@ E-commerce na Shopify com integração via Lexos para marketplaces e ERP Protheu
 
 <div align="center">
 
-<img height="170" src="https://github-readme-stats.vercel.app/api?username=rodniski&show_icons=true&theme=github_dark&hide_border=true&count_private=true" />
-<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=rodniski&layout=compact&theme=github_dark&hide_border=true&langs_count=8" />
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=rodniski&theme=github-dark-blue&hide_border=true" />
 
 </div>
 

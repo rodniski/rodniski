@@ -6,6 +6,7 @@
 
 Construindo produtos que escalam — do browser ao bolso.
 
+[![LinkedIn](https://img.shields.io/badge/-rodniski-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rodniski/)
 [![Instagram](https://img.shields.io/badge/-@rodniski-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://instagram.com/rodniski)
 [![GitHub](https://img.shields.io/badge/-rodniski-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/rodniski)
 

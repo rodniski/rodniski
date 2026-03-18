@@ -123,15 +123,6 @@ E-commerce na Shopify com integração via Lexos para marketplaces e ERP Protheu
 
 </details>
 
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=rodniski&theme=github-dark-blue&hide_border=true" />
-
-</div>
 
 ---
 

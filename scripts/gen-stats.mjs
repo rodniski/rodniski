@@ -12,8 +12,10 @@ import { writeFileSync, mkdirSync } from "node:fs";
 const SAMPLE = process.argv.includes("--sample");
 const TOKEN = process.env.STATS_TOKEN;
 if (!TOKEN && !SAMPLE) {
-  console.error("STATS_TOKEN ausente (ou rode com --sample).");
-  process.exit(1);
+  // sem token (ex.: Action ainda sem o secret STATS_TOKEN) — pula sem falhar,
+  // mantendo o stats.svg atual. Crie o secret p/ habilitar o refresh diário.
+  console.log("STATS_TOKEN ausente — pulando geração (rode com --sample p/ preview).");
+  process.exit(0);
 }
 
 const MONO = "ui-monospace, 'JetBrains Mono', SFMono-Regular, Consolas, monospace";

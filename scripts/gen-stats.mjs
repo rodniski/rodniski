@@ -43,69 +43,61 @@ async function gql(query, variables = {}) {
 }
 
 async function collect() {
-  // fase 1 — perfil
+  // fase 1 — perfil (PRs autorais são creditados pela CONTA, então já incluem a org)
   const base = await gql(`query{
     viewer{
       createdAt
       pullRequests{ totalCount }
-      repositories(ownerAffiliations:[OWNER], isFork:false){ totalCount }
     }
   }`);
-  const v = base.viewer;
-  const createdYear = new Date(v.createdAt).getUTCFullYear();
+  const createdYear = new Date(base.viewer.createdAt).getUTCFullYear();
   const nowYear = new Date().getUTCFullYear();
 
-  // fase 2 — commits por ano (histórico completo, inclui privado via aliases num só request)
-  const aliases = [];
-  for (let y = createdYear; y <= nowYear; y++) {
-    aliases.push(
-      `y${y}: contributionsCollection(from:"${y}-01-01T00:00:00Z", to:"${y}-12-31T23:59:59Z"){ totalCommitContributions restrictedContributionsCount }`
-    );
-  }
-  const cd = await gql(`query{ viewer{ ${aliases.join("\n")} } }`);
+  // fase 2 — por ano: commits, reviews e os REPOS onde de fato commitou (inclui privados/org).
+  // Usar commitContributionsByRepository em vez de repositories(OWNER) é o que traz a org —
+  // depende de o email do autor estar vinculado/verificado na conta.
   let totalCommits = 0;
   let thisYear = 0;
-  for (let y = createdYear; y <= nowYear; y++) {
-    const c = cd.viewer[`y${y}`] || {};
-    // com a opção de contribuições privadas LIGADA, restricted ~ 0 e o privado já entra em total.
-    const n = (c.totalCommitContributions || 0) + (c.restrictedContributionsCount || 0);
-    totalCommits += n;
-    if (y === nowYear) thisYear = n;
-  }
-
-  // fase 3 — linguagens + stars (paginado, inclui privado, sem forks)
+  let reviews = 0;
+  const seen = new Set(); // repos únicos onde commitou (dedupe entre anos)
   const langSize = new Map();
   const langColor = new Map();
-  let stars = 0;
-  let cursor = null;
-  let hasNext = true;
-  while (hasNext) {
-    const page = await gql(
-      `query($cursor:String){
-        viewer{
-          repositories(first:100, after:$cursor, ownerAffiliations:[OWNER], isFork:false, orderBy:{field:UPDATED_AT, direction:DESC}){
-            pageInfo{ hasNextPage endCursor }
-            nodes{
-              stargazerCount
+
+  for (let y = createdYear; y <= nowYear; y++) {
+    const d = await gql(`query{
+      viewer{
+        c: contributionsCollection(from:"${y}-01-01T00:00:00Z", to:"${y}-12-31T23:59:59Z"){
+          totalCommitContributions
+          restrictedContributionsCount
+          totalPullRequestReviewContributions
+          commitContributionsByRepository(maxRepositories:50){
+            repository{
+              nameWithOwner
+              isFork
               languages(first:10, orderBy:{field:SIZE, direction:DESC}){
                 edges{ size node{ name color } }
               }
             }
           }
         }
-      }`,
-      { cursor }
-    );
-    const repos = page.viewer.repositories;
-    for (const r of repos.nodes) {
-      stars += r.stargazerCount || 0;
+      }
+    }`);
+    const c = d.viewer.c || {};
+    // com "Include private contributions" LIGADO, restricted ~ 0 e o privado já entra em total.
+    const n = (c.totalCommitContributions || 0) + (c.restrictedContributionsCount || 0);
+    totalCommits += n;
+    if (y === nowYear) thisYear = n;
+    reviews += c.totalPullRequestReviewContributions || 0;
+
+    for (const item of c.commitContributionsByRepository || []) {
+      const r = item.repository;
+      if (r.isFork || seen.has(r.nameWithOwner)) continue;
+      seen.add(r.nameWithOwner);
       for (const e of r.languages?.edges || []) {
         langSize.set(e.node.name, (langSize.get(e.node.name) || 0) + e.size);
         if (e.node.color) langColor.set(e.node.name, e.node.color);
       }
     }
-    hasNext = repos.pageInfo.hasNextPage;
-    cursor = repos.pageInfo.endCursor;
   }
 
   const totalBytes = [...langSize.values()].reduce((a, b) => a + b, 0) || 1;
@@ -121,9 +113,9 @@ async function collect() {
   return {
     commits: totalCommits,
     thisYear,
-    prs: v.pullRequests.totalCount,
-    repos: v.repositories.totalCount,
-    stars,
+    prs: base.viewer.pullRequests.totalCount,
+    repos: seen.size, // repos onde contribuiu (inclui privados/org)
+    reviews,
     topLangs,
   };
 }
@@ -133,8 +125,8 @@ function sampleData() {
     commits: 4873,
     thisYear: 1920,
     prs: 214,
-    repos: 48,
-    stars: 37,
+    repos: 23,
+    reviews: 96,
     topLangs: [
       { name: "Go", pct: 38, color: "#00ADD8" },
       { name: "TypeScript", pct: 27, color: "#3178C6" },
@@ -172,7 +164,7 @@ function render(d) {
 
   return `<svg width="495" height="210" viewBox="0 0 495 210" role="img" xmlns="http://www.w3.org/2000/svg">
 <title>Estatísticas de GitHub de Guilherme Rodniski</title>
-<desc>${fmt(d.commits)} commits (inclui privados), ${fmt(d.prs)} pull requests, ${fmt(d.repos)} repositórios, ${fmt(d.stars)} stars. Linguagens: ${d.topLangs.map((l) => `${l.name} ${l.pct}%`).join(", ")}.</desc>
+<desc>${fmt(d.commits)} commits (inclui privados), ${fmt(d.prs)} pull requests, ${fmt(d.repos)} repositórios, ${fmt(d.reviews)} code reviews. Linguagens: ${d.topLangs.map((l) => `${l.name} ${l.pct}%`).join(", ")}.</desc>
 <rect x="0" y="0" width="495" height="210" rx="18" fill="#161B1A"/>
 <line x1="300" y1="34" x2="300" y2="176" stroke="#2A312F" stroke-width="1"/>
 <text x="28" y="42" fill="#B9A87E" font-size="11" letter-spacing="2" font-family="${MONO}">GITHUB · INCL. PRIVATE</text>
@@ -183,8 +175,8 @@ function render(d) {
 <text x="28" y="184" fill="#8B928C" font-size="11" font-family="${SANS}">pull requests</text>
 <text x="120" y="166" fill="#37A88C" font-size="22" font-weight="600" font-family="${MONO}">${fmt(d.repos)}</text>
 <text x="120" y="184" fill="#8B928C" font-size="11" font-family="${SANS}">repositórios</text>
-<text x="200" y="166" fill="#D2B05A" font-size="22" font-weight="600" font-family="${MONO}">${fmt(d.stars)}</text>
-<text x="200" y="184" fill="#8B928C" font-size="11" font-family="${SANS}">stars</text>
+<text x="200" y="166" fill="#D2B05A" font-size="22" font-weight="600" font-family="${MONO}">${fmt(d.reviews)}</text>
+<text x="200" y="184" fill="#8B928C" font-size="11" font-family="${SANS}">code reviews</text>
 <text x="324" y="42" fill="#B9A87E" font-size="11" letter-spacing="2" font-family="${MONO}">LINGUAGENS</text>
 <rect x="324" y="54" width="139" height="9" rx="4.5" fill="#2A312F"/>
 ${segs}
@@ -197,5 +189,5 @@ const data = SAMPLE ? sampleData() : await collect();
 mkdirSync("assets", { recursive: true });
 writeFileSync("assets/stats.svg", render(data));
 console.log(
-  `stats.svg gerado — commits ${fmt(data.commits)} · prs ${fmt(data.prs)} · repos ${fmt(data.repos)} · stars ${fmt(data.stars)} · langs ${data.topLangs.map((l) => l.name).join("/")}${SAMPLE ? " (SAMPLE)" : ""}`
+  `stats.svg gerado — commits ${fmt(data.commits)} · prs ${fmt(data.prs)} · repos ${fmt(data.repos)} · reviews ${fmt(data.reviews)} · langs ${data.topLangs.map((l) => l.name).join("/")}${SAMPLE ? " (SAMPLE)" : ""}`
 );

@@ -2,7 +2,7 @@
 
 # Guilherme Rodniski
 
-**Full-Stack Engineer · Multi-Platform Architect · Design Systems**
+**Full-Stack Engineer · Creative Technologist**
 
 I build products that scale from the browser to the pocket — one API contract, three native clients, zero drift.
 

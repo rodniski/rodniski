@@ -13,6 +13,12 @@ I build products that scale from the browser to the pocket — one API contract,
 
 </div>
 
+<div align="center">
+
+[![GitHub stats de Guilherme Rodniski — inclui trabalho privado](assets/stats.svg)](https://github.com/rodniski)
+
+</div>
+
 ---
 
 ## 👋 About
@@ -154,17 +160,6 @@ Internal platform: corporate email-signature generator, tire-dispatch control wi
 Shopify store integrated via Lexos for marketplaces and the Protheus ERP. End-to-end automation of orders, inventory, and billing — a success case blending technology, automation, and sales strategy.
 
 </details>
-
----
-
-## 📊 GitHub
-
-<div align="center">
-
-![Stats](https://github-readme-stats.vercel.app/api?username=rodniski&show_icons=true&hide_border=true&theme=tokyonight)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=rodniski&layout=compact&hide_border=true&theme=tokyonight)
-
-</div>
 
 ---
 

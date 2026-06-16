@@ -46,6 +46,8 @@ A **SwiftUI** app that detects, configures, and runs builds across a multi-platf
 
 > One Protobuf contract, a Go edge, three native clients, zero drift. The foundation behind every Med4U digital product.
 
+![M4Labs — doctor dashboard (SvelteKit web client)](assets/m4labs-dashboard.png)
+
 ```
 proto (labs.v1)  ──[ buf generate ]──►  type-safe Connect clients
   ├── Web      protoc-gen-es   →  TypeScript + @connectrpc/connect-web   (SvelteKit)
@@ -83,6 +85,8 @@ proto (labs.v1)  ──[ buf generate ]──►  type-safe Connect clients
 - **food (web)** — iFood IOP ordering PWA (SvelteKit + DaisyUI).
 - **m4doc (iOS)** — native SwiftUI app, `connect-swift` straight to the BFF, custom GLSL→Metal shader background, *Lumen* theme.
 - **m4doc (Android)** — native Jetpack Compose app, Material 3.
+
+![M4Labs — sign-in screen with a custom GLSL→Metal kintsugi-marble shader](assets/m4labs-login.png)
 
 ---
 
